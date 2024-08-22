@@ -38,3 +38,12 @@ async def get_all_tasks() -> list[STask]:
 async def delete_task(task_id: int):
     result = await TaskRepository.delete_one(task_id)
     return {"ok": result}
+
+
+@router.delete("")
+async def delete_all():
+    resulty = await TaskRepository.delete_all_tasks()
+    if resulty:
+        return {"message": "All tasks have been deleted!"}
+    else:
+        raise HTTPException(status_code=404, detail="Not tasks found to delete")

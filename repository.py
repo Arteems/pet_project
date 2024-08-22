@@ -57,3 +57,19 @@ class TaskRepository:
                 await session.commit()
                 return True
         return False
+
+    @classmethod
+    async def delete_all_tasks(cls) -> bool:
+        try:
+            async with new_session() as session:
+                tasks = await session.execute(select(TaskOrm))
+                tasks = tasks.scalars().all()
+                if tasks:
+                    for task in tasks:
+                        await session.delete(task)
+                    await session.commit()
+                    return True
+                return False
+        except Exception as e:
+            print(f"Возникла ошибка: {e}")
+            return False
