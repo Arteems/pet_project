@@ -2,7 +2,7 @@ from sqlalchemy import select
 import logging
 
 from database import new_session, TaskOrm
-from schemas import STaskAdd, STask
+from schemas import STaskAdd, STask, STaskUpdate
 
 
 logging.basicConfig(
@@ -75,3 +75,14 @@ class TaskRepository:
         except Exception as e:
             print(f"Возникла ошибка: {e}")
             return False
+
+    @classmethod
+    async def update_one(cls, task_id: int, task_update: STaskUpdate) -> TaskOrm | None:
+        async with new_session() as session:
+            task = await session.get(TaskOrm, task_id)
+            if task:
+                task.name = task_update.name
+                task.description = task_update.description
+                await session.commit()
+                return task
+            return None

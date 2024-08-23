@@ -8,3 +8,7 @@ class STaskAdd(BaseModel):
 
 class STask(STaskAdd):
     id: int
+
+
+class STaskUpdate(STask):
+    id: int

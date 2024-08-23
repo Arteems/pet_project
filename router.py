@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 
 from repository import TaskRepository
-from schemas import STaskAdd, STask
+from schemas import STaskAdd, STask, STaskUpdate
 
 router = APIRouter(prefix="/tasks", tags=["таски"])
 
@@ -47,3 +47,13 @@ async def delete_all():
         return {"message": "All tasks have been deleted!"}
     else:
         raise HTTPException(status_code=404, detail="Not tasks found to delete")
+
+
+@router.put("")
+async def update_one_task(task_id: int, task_update: STaskUpdate):
+
+    task = await TaskRepository.update_one(task_id, task_update)
+    if task:
+        return {"message": "Task is updated!"}
+    else:
+        raise HTTPException(status_code=404, detail="Task not found")
